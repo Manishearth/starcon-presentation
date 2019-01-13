@@ -55,27 +55,28 @@ take 2:
 
 ♫
 
-Hi, my name is Manish. (@@ more intro.)
+Hi, my name is Manish. I work at Mozilla on the Servo browser engine and contribute to the Rust programming language.
 
 
 §
 
-<img src="img/rust-logo-blk.svg" width="50%" class=blend></img>
+### I think compilers are rad!!
 
 ♫
 
-I often work with the Rust programming language. It's a really nice language. It's compiled.
+I think compilers are really cool!! I've been involved with the Rust compiler for many years now and I'm still learning new things about it!
 
 §
-### Compiled languages
+### Compilers?
 
 
 <img src="img/compilers.svg" width="50%" class=blend></img>
 
 ♫
 
+So, what's a compiler?
 
-In some cases a program is _interpreted_, and in others it is _compiled_. When it's interpreted, you have an "interpreter program" that reads the program, tries to understand it, and carries out the various steps listed in it. When it's compiled, you have a compiler program that reads the program, tries to understand it, and converts it into a different format the computer can understand better. In many cases this format is "machine code", which CPUs can understand.
+When you write programs, in some cases the program is _interpreted_, and in others it is _compiled_. When it's interpreted, you have an "interpreter program" that reads the program, tries to understand it, and carries out the various steps listed in it. When it's compiled, you have a compiler program that reads the program, tries to understand it, and converts it into a different format the computer can understand better. In many cases this format is "machine code", which CPUs can understand.
 
 Compilers are a fundamental tool in programming and are necessary for programming in many languages.
 
@@ -147,7 +148,7 @@ Newer languages typically use compilers written in a different language to get s
 
 Have you ever thought about how much we trust the tools we use?
 
-In 1984, Ken Thompson gave a talk about the nature of trust, and focused on a fascinating outcome of this bootstrapping process. It turns out you can use this process to "hide" vulnerabilities in a compiler!
+In 1984, Ken Thompson gave a talk about the nature of trust, and focused on a fascinating outcome of this bootstrapping process. It turns out!so you can use this process to "hide" vulnerabilities in a compiler!
 
 §§
 ### Trusting Trust
@@ -233,7 +234,7 @@ def after_parsing(program):
 
 ♫
 
-So our first step was to insert _some_ backdoor into the compiler. I didn't want to do the entire attack at once since I wasn't yet quite sure how to do it, so I instead wrote a simple backdoor that replaces strings that say "hello world" with the equivalent in my native language (जगाला नमस्कार).
+So my first step was to insert _some_ backdoor into the compiler. I didn't want to do the entire attack at once since I wasn't yet quite sure how to do it, so I instead wrote a simple backdoor that replaces strings that say "hello world" with the equivalent in my native language (जगाला नमस्कार).
 
 The code in this slide is pseudocode; the original Rust code is a bit more complex but the underlying principle is the same. I'll link to a long-form blog post at the end of this talk that contains the actual Rust code if you're interested.
 
@@ -281,7 +282,7 @@ print "s = '" + s + "';" + s
 
 ♫
 
-Turns out this is a conundrum similar to the one you have when you're constructing quines. A quine is a program that prints its own source code. These are tricky construct, because of the same reason: if your program contains its own source code, that source code ... needs to contain itself, which makes your program size unbounded.
+Turns out this is a conundrum similar to the one you have when you're constructing quines. A quine is a program that prints its own source code. These are tricky to construct, because of the same reason: if your program contains its own source code, that source code ... needs to contain itself, which makes your program size infinite.
 
 With quines, there's a simple trick to get around this: Use a variable!
 
@@ -315,9 +316,11 @@ def add_backdoor(program):
 
 ♫
 
-When we try to apply it, we have a variable, PROGRAM_STRING, containing the full contents of the `add_backdoor` function.
+Alright. Let's try to apply what we've learned to our attack.
 
-When we find the "after_parsing" function, we add the function call to it, and then we parse the PROGRAM_STRING line to create a function to insert next to it.
+We now have a variable, PROGRAM_STRING, containing the full contents of the `add_backdoor` function.
+
+When we find the "after_parsing" function, we add the function call to it (as we did last time), and then we parse the PROGRAM_STRING line to create a function to insert next to it.
 
 Finally, we create the line that sets PROGRAM_STRING itself, again reusing PROGRAM_STRING for its contents.
 
@@ -328,7 +331,7 @@ As you can see here, the PROGRAM_STRING variable is used twice here, once for pr
 
 ♫
 
-While I did this with the Rust compiler, most compilers work similarly. This attack is a fun way to learn more about a compiler, if you're interested in playing with compilers I suggest you try doing this yourself with a compiler of your choice!
+While I did this with the Rust compiler, most compilers work similarly. This attack is a fun way to learn more about a compiler -- if you're interested in playing with compilers I suggest you try doing this yourself with a compiler of your choice!
 
 <!-- maybe a slide on implications and mitigations -->
 

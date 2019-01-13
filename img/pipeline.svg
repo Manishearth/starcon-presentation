@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!--
+digraph G {
+    parse[label="Parsing"]
+    name[label="Name resolution"]
+    type[label="Type checking\n(etc)"]
+    opt[label="Optimizations"]
+    codegen[label="Codegen"]
+    source->parse->name->type->opt->codegen->machine;
+    machine[label="Machine code",shape=parallelogram];
+    source[label="Source code",shape=parallelogram];
+    
+    {rank=same; parse, name, type,opt, codegen}
+}
+-->
+<svg width="769pt" height="211pt"
+ viewBox="0.00 0.00 768.75 210.83" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 206.8313)">
+<title>G</title>
+<polygon fill="transparent" stroke="transparent" points="-4,4 -4,-206.8313 764.7498,-206.8313 764.7498,4 -4,4"/>
+<!-- parse -->
+<g id="node1" class="node">
+<title>parse</title>
+<ellipse fill="none" stroke="#000000" cx="85.7642" cy="-101.4156" rx="40.005" ry="18"/>
+<text text-anchor="middle" x="85.7642" y="-97.2156" font-family="Times,serif" font-size="14.00" fill="#000000">Parsing</text>
+</g>
+<!-- name -->
+<g id="node2" class="node">
+<title>name</title>
+<ellipse fill="none" stroke="#000000" cx="218.7642" cy="-101.4156" rx="75.2595" ry="18"/>
+<text text-anchor="middle" x="218.7642" y="-97.2156" font-family="Times,serif" font-size="14.00" fill="#000000">Name resolution</text>
+</g>
+<!-- parse&#45;&gt;name -->
+<g id="edge2" class="edge">
+<title>parse&#45;&gt;name</title>
+<path fill="none" stroke="#000000" d="M125.7681,-101.4156C128.364,-101.4156 130.9598,-101.4156 133.5556,-101.4156"/>
+<polygon fill="#000000" stroke="#000000" points="133.5682,-104.9157 143.5682,-101.4156 133.5681,-97.9157 133.5682,-104.9157"/>
+</g>
+<!-- type -->
+<g id="node3" class="node">
+<title>type</title>
+<ellipse fill="none" stroke="#000000" cx="381.7642" cy="-101.4156" rx="69.7268" ry="29.3315"/>
+<text text-anchor="middle" x="381.7642" y="-105.6156" font-family="Times,serif" font-size="14.00" fill="#000000">Type checking</text>
+<text text-anchor="middle" x="381.7642" y="-88.8156" font-family="Times,serif" font-size="14.00" fill="#000000">(etc)</text>
+</g>
+<!-- name&#45;&gt;type -->
+<g id="edge3" class="edge">
+<title>name&#45;&gt;type</title>
+<path fill="none" stroke="#000000" d="M293.897,-101.4156C296.4999,-101.4156 299.1027,-101.4156 301.7055,-101.4156"/>
+<polygon fill="#000000" stroke="#000000" points="301.7451,-104.9157 311.745,-101.4156 301.745,-97.9157 301.7451,-104.9157"/>
+</g>
+<!-- opt -->
+<g id="node4" class="node">
+<title>opt</title>
+<ellipse fill="none" stroke="#000000" cx="535.7642" cy="-101.4156" rx="65.5064" ry="18"/>
+<text text-anchor="middle" x="535.7642" y="-97.2156" font-family="Times,serif" font-size="14.00" fill="#000000">Optimizations</text>
+</g>
+<!-- type&#45;&gt;opt -->
+<g id="edge4" class="edge">
+<title>type&#45;&gt;opt</title>
+<path fill="none" stroke="#000000" d="M451.8462,-101.4156C454.4755,-101.4156 457.1048,-101.4156 459.734,-101.4156"/>
+<polygon fill="#000000" stroke="#000000" points="459.8755,-104.9157 469.8755,-101.4156 459.8755,-97.9157 459.8755,-104.9157"/>
+</g>
+<!-- codegen -->
+<g id="node5" class="node">
+<title>codegen</title>
+<ellipse fill="none" stroke="#000000" cx="664.7642" cy="-101.4156" rx="45.2285" ry="18"/>
+<text text-anchor="middle" x="664.7642" y="-97.2156" font-family="Times,serif" font-size="14.00" fill="#000000">Codegen</text>
+</g>
+<!-- opt&#45;&gt;codegen -->
+<g id="edge5" class="edge">
+<title>opt&#45;&gt;codegen</title>
+<path fill="none" stroke="#000000" d="M601.524,-101.4156C604.1178,-101.4156 606.7117,-101.4156 609.3055,-101.4156"/>
+<polygon fill="#000000" stroke="#000000" points="609.3103,-104.9157 619.3103,-101.4156 609.3103,-97.9157 609.3103,-104.9157"/>
+</g>
+<!-- machine -->
+<g id="node7" class="node">
+<title>machine</title>
+<polygon fill="none" stroke="#000000" points="760.7353,-36 608.0668,-36 568.7931,0 721.4616,0 760.7353,-36"/>
+<text text-anchor="middle" x="664.7642" y="-13.8" font-family="Times,serif" font-size="14.00" fill="#000000">Machine code</text>
+</g>
+<!-- codegen&#45;&gt;machine -->
+<g id="edge6" class="edge">
+<title>codegen&#45;&gt;machine</title>
+<path fill="none" stroke="#000000" d="M664.7642,-83.3157C664.7642,-72.4941 664.7642,-58.5108 664.7642,-46.2607"/>
+<polygon fill="#000000" stroke="#000000" points="668.2643,-46.0646 664.7642,-36.0646 661.2643,-46.0647 668.2643,-46.0646"/>
+</g>
+<!-- source -->
+<g id="node6" class="node">
+<title>source</title>
+<polygon fill="none" stroke="#000000" points="171.2933,-202.8313 35.2357,-202.8313 .2351,-166.8313 136.2928,-166.8313 171.2933,-202.8313"/>
+<text text-anchor="middle" x="85.7642" y="-180.6313" font-family="Times,serif" font-size="14.00" fill="#000000">Source code</text>
+</g>
+<!-- source&#45;&gt;parse -->
+<g id="edge1" class="edge">
+<title>source&#45;&gt;parse</title>
+<path fill="none" stroke="#000000" d="M85.7642,-166.7313C85.7642,-155.9097 85.7642,-141.9265 85.7642,-129.6763"/>
+<polygon fill="#000000" stroke="#000000" points="89.2643,-129.4802 85.7642,-119.4803 82.2643,-129.4803 89.2643,-129.4802"/>
+</g>
+</g>
+</svg>
