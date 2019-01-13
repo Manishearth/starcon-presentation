@@ -1,5 +1,7 @@
 <!--
 
+Graphviz with http://viz-js.com/
+
 Compilers are cool! They take our code and turn it into something that runs (sometimes). But who compiles the compiler?
 
 Turns out that a lot of compilers we use are "self-hosted", which means they're written in the same language they compile and are compiled by ... themselves .. ?
@@ -26,10 +28,28 @@ In this talk, I'll explain how self-hosted compilers work, how the trusting trus
 - (1m) Pitch for folks to work on compilers
 
 
+take 2:
+
+- Hi I'm Manish,
+- This is Rust. It's cool. It's compiled.
+- What's a compiler anyway? (Source code -> machine code)
+- Okay but have you ever thought about how much people trust compilers to faithfully translate their code?
+- This guy did. He invented the trusting trust attack
+- I thought this was cool and wanted to do it
+- a few years later I did
+- This is how:
+- Added some code in the very first step of the compiler where it takes the text of your code and tries to understand it
+- The code I added did this
+- This was one of the hurdles I ran into adding the trust module
+- Had to add a quine (use the word once to define it, then use the definition of the word)
+- blah blah blah
+
 -->
 
 ### Ghost in the Compiler
 #### Backdooring Rust
+
+<small>http://manishearth.github.io/starcon-presentation/</small>
 <br>
 <small> &mdash; Manish Goregaokar (@Manishearth)</small>
 
@@ -39,46 +59,33 @@ Hi, my name is Manish. (@@ more intro.)
 
 
 §
-### How does programming work anyway?
 
-
+<img src="img/rust-logo-blk.svg" width="50%" class=blend></img>
 
 ♫
 
-I've always loved learning how things work under the hood
-
-At some point in my journey as a programmer, I realized that I didn't understand how programming ... actually worked ...? I would write some code and the computer would know how to run it, but how did it know what to do?
-
-So I looked it up.
+I often work with the Rust programming language. It's a really nice language. It's compiled.
 
 §
-### Interpreters and compilers?
+### Compiled languages
 
+
+<img src="img/compilers.svg" width="50%" class=blend></img>
 
 ♫
 
 
-The answer turned out to be that in some cases a program is _interpreted_, and in others it is _compiled_. When it's interpreted, you have an "interpreter program" that reads the program, tries to understand it, and carries out the various steps listed in it. When it's compiled, you have a compiler program that reads the program, tries to understand it, and converts it into a different format the computer can understand better. In many cases this format is "machine code", which CPUs can understand.
+In some cases a program is _interpreted_, and in others it is _compiled_. When it's interpreted, you have an "interpreter program" that reads the program, tries to understand it, and carries out the various steps listed in it. When it's compiled, you have a compiler program that reads the program, tries to understand it, and converts it into a different format the computer can understand better. In many cases this format is "machine code", which CPUs can understand.
 
+Compilers are a fundamental tool in programming and are necessary for programming in many languages.
 
 §
-### What?
-
-♫
-
-Wait, that didn't really help! Programs work because there are ... programs ... that make the programs work .. ?
-
-Where did those programs come from?
-
-Well, it turned out that most interpreters are programs written in compiled languages. So if you want to write an interpreter, you pick a language with a compiler and write the interpreter in that language. You then compile this program, and you have an interpreter program.
-
-So the real curiosity for me was compilers.
-
-§
-### <s>Interpreters and</s> compilers?
+### Who compiles the compilers?
 
 
 ♫
+
+But compilers are themselves programs, which came from somewhere, right?
 
 Compilers are also usually written in compiled languages.
 
@@ -90,23 +97,25 @@ Which ... also needed a compiler to be built?
 
 It's compilers all the way down!
 
-
 §
 
-(@@ compilers-all-the-way-down-dot-jpg)
+<img src="img/turtles.png" width="40%" class=blend></img>
 
+
+<br>
+<small>https://commons.wikimedia.org/wiki/File:Turtles_all_the_way_down.png</small>
 ♫
 
-I tried to look this up more, and discovered that it was even more confusing.
+Actually, it's worse than that!
 
-For many languages, the compiler for that language is written in ... that language! So for example, gcc, a compiler for C, was also written in C at the time. To build gcc you already need a copy of GCC.
+For many languages, the compiler for that language is written in ... that language! The Rust compiler is written in Rust, so you need a Rust compiler to build your Rust compiler. This is true for many popular C++ compilers too, like GCC.
 
 That makes even less sense ...
 
 §
 ### Bootstrapped compilers
 
-(@@ diagram here)
+<img src="img/bootstrap1.svg" width="75%" class=blend></img>
 
 ♫
 
@@ -115,33 +124,28 @@ Such compilers are called "bootstrapped compilers". The way their development wo
 §§
 ### Bootstrapped compilers
 
-(@@ diagram here)
+<img src="img/bootstrap2.svg" width="50%" class=blend></img>
 
 
 ♫
 
-Eventually, this chicken-and-egg problem has to end up _somewhere_, which is where the "bootstrapping" comes in. When Dennis Ritchie wrote the first C compiler, he started off by writing a compiler for a much simpler version of C in assembly language. Assembly language is a straightforward human-readable translation of machine code, which the CPU understands. This translation can be done by an assembler, which is itself a program that may have been directly written in machine code.
+Eventually, this chicken-and-egg problem has to end up _somewhere_, which is where the "bootstrapping" comes in. When Dennis Ritchie wrote the first C compiler, he started off by writing a compiler for a much simpler version of C (let's call it C0) in assembly language. Assembly language is a straightforward human-readable translation of machine code, which the CPU understands. This translation can be done by an assembler, which is itself a program that may have been directly written in machine code.
 
-Then, a compiler was written in this simpler version of C. This compiler supported a more complex (but not yet complete) version of C. This compiler was built with the older compiler. Then this code was improved to support more features, rebuilt with itself, and then updated to use these new features. This continued.
+Then, a compiler was written in this simpler version of C. This compiler supported a more complex (but not yet complete) version of C, called C1. This compiler was built with the older compiler. Then this code was improved to support more features, rebuilt with itself, and then updated to use these new features. This continued.
 
 This cycle took a while, but eventually there was a point where he had a compiler that could compile C. Since then, C has evolved, and the compilers have evolved with it, via this same process.
 
-§§
-### Bootstrapped compilers
-
-(@@ diagram here)
-
-♫
-
-Such compilers are called "bootstrapped compilers". The way their development works is that you build new compilers using older versions. The current GCC can be built with most C++ compilers from at least the past decade. And so on. Similarly, most recent versions of the Rust compiler are built with a previous version of Rust.
+Newer languages typically use compilers written in a different language to get started, and eventually switch to being built on their own. For example, the Rust compiler was originally written in a language called OCaml.
 
 
 §
 ### Trusting Trust
 
-(@@ photo of ken thompson and/or trusting trust paper)
+<img src="img/trusting.png" width="50%" class=blend></img>
 
 ♫
+
+Have you ever thought about how much we trust the tools we use?
 
 In 1984, Ken Thompson gave a talk about the nature of trust, and focused on a fascinating outcome of this bootstrapping process. It turns out you can use this process to "hide" vulnerabilities in a compiler!
 
@@ -176,9 +180,11 @@ def compile_function(name, code):
 
 ♫
 
-A simple answer to the problem is that you can compile the compiler from source, yourself.
+A simple answer to this problem is that you can compile the compiler from source, yourself. Not a big deal.
 
 But now you have the same problem with the compiler! Since you need a copy of the compiler to build a copy of the compiler, someone can backdoor that compiler so that _it detects that it's building the compiler_ and inserts _itself_ into the new copy, even if the source code being compiled doesn't have this backdoor!
+
+You're now _forced_ to trust your tools!
 
 This kind of attack is often called the "Trusting Trust" attack.
 
@@ -324,7 +330,6 @@ As you can see here, the PROGRAM_STRING variable is used twice here, once for pr
 
 While I did this with the Rust compiler, most compilers work similarly. This attack is a fun way to learn more about a compiler, if you're interested in playing with compilers I suggest you try doing this yourself with a compiler of your choice!
 
-
 <!-- maybe a slide on implications and mitigations -->
 
 §
@@ -339,5 +344,8 @@ Anyway, compilers are cool! I really hope this talk motivates some of you to pla
 §
 ### Thank you!
 
+ - Slides: https://git.io/fhnaW
+ - Blog post version: https://git.io/fhnac
  - Short words: https://twitter.com/Manishearth
  - Long words: https://manishearth.github.io
+
