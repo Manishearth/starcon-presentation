@@ -37,6 +37,49 @@
 			.reveal pre code {
 				max-height: 1000px;
 			}
+
+			.reveal mark.fragment {
+				visibility: visible !important;
+				opacity: 1 !important;
+				color: inherit !important;
+				background: none;
+				display: inline-block;
+				position: relative;
+			}
+
+			.reveal mark.fragment:before {
+				display: block;
+				position: absolute;
+				top:0;
+				left:0;
+				bottom: 0;
+				right: 0;
+				content: " ";
+				box-shadow: 0px 0px 0px 2500px #3f3f3f00;
+				z-index: 100;
+				transition: box-shadow 0.3s ease;
+			}
+
+			.reveal mark.fragment.current-fragment:before { 
+				box-shadow: 0px 0px 0px 2500px #3f3f3f80;
+			}
+
+/*			.reveal mark.fragment {
+				visibility: visible !important;
+				opacity: 1 !important;
+				color: inherit !important;
+				background: none;
+				display: inline-block;
+				position: relative;
+				transition: none;
+				position: relative;
+			}
+
+			.reveal mark.fragment.current-fragment {
+				z-index: 100;
+				box-shadow: 0px 0px 0px 2500px #3f3f3f80;
+				transition:none;
+			}*/			
 		</style>
 	</head>
 	<body>

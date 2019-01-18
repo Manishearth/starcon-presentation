@@ -218,22 +218,23 @@ As you go further down this pipeline, the code is represented in more and more c
 §
 ### First tweaks
 
-```rust
+<pre><code class="rust" data-noescape data-trim>
 fn add_backdoor(program: Program) {
-    for expression in program.expressions() {
-        if expression.is_string_literal() {
-            if expression.value == "hello world" {
-                expression.set(StringExpression::new("जगाला नमस्कार"));
+    <mark class="fragment" data-fragment-index=3>for expression in program.expressions()</mark> {
+<mark class="fragment" data-fragment-index=4>       if expression.is_string_literal() {
+            if expression.value == "hello world" {</mark>
+                <mark class="fragment" data-fragment-index=5>expression.set(StringExpression::new("जगाला नमस्कार"));</mark>
             }
         }
     }
 }
 
+<mark class="fragment" data-fragment-index=1>
 fn after_parsing(program: Program) {
-    add_backdoor(program)
+    <mark class="fragment" data-fragment-index=2>add_backdoor(program)</mark>
     // rest of the code
-}
-```
+}</mark>
+</code></pre>
 
 ♫
 
@@ -241,14 +242,14 @@ So my first step was to insert _some_ backdoor into the compiler. I didn't want 
 
 The code in this slide is pseudocode; the original Rust code is a bit more complex but the underlying principle is the same. I'll link to a long-form blog post at the end of this talk that contains the actual Rust code if you're interested.
 
-I first found the part of the compiler that handles the next steps after parsing. For convenience I've called it "after_parsing" in the pseudocode above. There's a variable containing the parsed program, and I pass it to a function where I define the backdoor.
+I first found §the part of the compiler that handles the next steps after parsing. For convenience I've called it "after_parsing" in the pseudocode above. There's a variable containing the parsed program, and I §pass it to a function where I define the backdoor.
 
-In this function, I basically iterate through all the expressions in the program, looking for string expressions that contain "hello world", and replace them with fresh string expressions containing जगाला नमस्कार.
+In this function, I basically §iterate through all the expressions in the program, looking for §string expressions that contain "hello world", and §replace them with fresh string expressions containing जगाला नमस्कार.
 
 §
 ### Trusting trust attack, take 1
 
-```rust
+<pre><code class="rust" data-noescape data-trim>
 fn add_backdoor(program: Program) {
     for expression in program.expressions() {
         if expression.is_string_literal() {
@@ -258,11 +259,12 @@ fn add_backdoor(program: Program) {
         }
     }
 
-    for function in program.functions() {
-        if function.name == "after_parsing" {}
-            expr = parse("add_backdoor(program)");
-            function.body.insert_expression(expr);
-            function.parent.insert_function(????);
+    <mark class="fragment">for function in program.functions() {</mark>
+        <mark class="fragment">if function.name == "after_parsing" {</mark>
+<mark class="fragment">         expr = parse("add_backdoor(program)");
+            function.body.insert_expression(expr);</mark>
+            <mark class="fragment">function.parent.insert_function(????);</mark>
+        }
     }
 }
 
@@ -270,13 +272,13 @@ fn after_parsing(program: Program) {
     add_backdoor(program)
     # rest of the code    
 }    
-```
+</code></pre>
 
 ♫
 
-Alright, the next step is to make the backdoor add itself. We can iterate through all the functions in the program, looking for a function named "after_parsing", and add the "add_backdoor" line to its body.
+Alright, the next step is to make the backdoor add itself. We can §iterate through all the functions in the program, §looking for a function named "after_parsing", and §add the "add_backdoor" line to its body.
 
-But how will we add the "add_backdoor" function to the code? We need to somehow get this code to insert its own source. For that the source of the program needs to be in this function itself as a string. But then _that string_ needs to be in the source as well, which means it needs to be inside itself, which is impossible.
+But how will we §add the "add_backdoor" function to the code? We need to somehow get this code to insert its own source. For that the source of the program needs to be in this function itself as a string. But then _that string_ needs to be in the source as well, which means it needs to be inside itself, which is impossible.
 
 We need a different solution.
 
@@ -284,29 +286,33 @@ We need a different solution.
 ### Quines
 
 
-```python
-s = 'print "s = '" + s + "';" + s';
-print "s = '" + s + "';" + s
-```
+<pre><code class="python" data-noescape data-trim>
+<mark class="fragment" data-fragment-index=1>s = 'print "s = '" + s + "';" + s';</mark>
+<mark class="fragment" data-fragment-index=2>print <mark class="fragment" data-fragment-index=3>"s = '" + s + "';"</mark><mark class="fragment" data-fragment-index=4> + s</mark></mark>
+</code></pre>
 
+<!--
+s = 'print "s = '" + s + "';" + s';
+print "s = " + s + "';" + s
+-->
 ♫
 
 Turns out this is a conundrum similar to the one you have when you're constructing quines. A quine is a program that prints its own source code. These are tricky to construct, because of the same reason: if your program contains its own source code, that source code ... needs to contain itself, which makes your program size infinite.
 
 With quines, there's a simple trick to get around this: Use a variable!
 
-We first create a variable that will contain _just the printing portion_ of the program. In the printing portion, we first print the line that sets this variable, using the variable we just created for the value, and then we have it print itself, by printing the variable again.
+We first §create a variable that will contain _just the printing portion_ of the program. As you can see, this variable basically contains the second line of the program. §In the printing portion, we first §print the line that sets this variable, using the variable we just created for the value, §and then we have it print itself, by printing the variable again.
 
 (point at things on slide)
 
-@@ this is tricky to explain well, ways to improve?
+If you look closely this example doesn't _quite_ solve the problem; you still need to be able to deal with escaping, however there are various ways to fix that depending on the language which are less relevant here. The core insight is the ability to use a variable twice, once to print the line constructing itself, and once to print the rest of the program.
 
 
 §
 ### Applying the attack
 
-```rust
-const PROGRAM_STRING: &str = "(all the code below, but not this line)";
+<pre><code class="python" data-noescape data-trim>
+<mark class="fragment" data-fragment-index=1>const PROGRAM_STRING: &str = "(all the code below, but not this line)";</mark>
 
 fn add_backdoor(program) {
     for expression in program.expressions() {
@@ -318,28 +324,30 @@ fn add_backdoor(program) {
     }
 
     for function in program.functions() {
-        if function.name == "after_parsing" {
-            expr = parse("add_backdoor(program)");
-            function.body.insert_expression(expr);
-            function.parent.insert_function(parse(PROGRAM_STRING));
-            top_line = "const PROGRAM_STRING: &str = \"" + PROGRAM_STRING + "\"";
-            function.parent.insert_expression(parse(top_line));
-        }
+<mark class="fragment" data-fragment-index=2>        if function.name == "after_parsing" {
+<mark class="fragment" data-fragment-index=3>            expr = parse("add_backdoor(program)");
+            function.body.insert_expression(expr);</mark>
+<mark class="fragment" data-fragment-index=4>            function.parent.insert_function(parse(PROGRAM_STRING));</mark>
+<mark class="fragment" data-fragment-index=5>            top_line = <mark class="fragment" data-fragment-index=6>"const PROGRAM_STRING: &str = \""</mark> + <mark class="fragment" data-fragment-index=7>PROGRAM_STRING</mark> + "\"";
+            function.parent.insert_expression(parse(top_line));</mark>
+        }</mark>
     }
 }
-```
+</code></pre>
 
 ♫
 
 Alright. Let's try to apply what we've learned to our attack.
 
-We now have a variable, PROGRAM_STRING, containing the full contents of the `add_backdoor` function.
+§We now have a variable, PROGRAM_STRING, containing the full contents of the `add_backdoor` function.
 
-When we find the "after_parsing" function, we add the function call to it (as we did last time), and then we parse the PROGRAM_STRING line to create a function to insert next to it.
+§When we find the "after_parsing" function, §we first the function call to it (as we did last time).
 
-Finally, we create the line that sets PROGRAM_STRING itself, again reusing PROGRAM_STRING for its contents.
+Then, we §parse the PROGRAM_STRING line to create a function to insert next to it.
 
-As you can see here, the PROGRAM_STRING variable is used twice here, once for producing the add_backdoor function, and once for producing itself!
+§Finally, we create the line that sets PROGRAM_STRING itself, again reusing PROGRAM_STRING for its contents.
+
+As you can see here, the PROGRAM_STRING variable is used twice here, §once for producing the add_backdoor function, and §once for producing itself!
 
 §
 ### Try it!
