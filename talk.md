@@ -74,7 +74,7 @@ I think compilers are really cool!! I've been involved with the Rust compiler fo
 
 ♫
 
-So, what's a compiler?
+So, what _is_ a compiler?
 
 When you write programs, in some cases the program is _interpreted_, and in others it is _compiled_. When it's interpreted, you have an "interpreter program" that reads the program, tries to understand it, and carries out the various steps listed in it. When it's compiled, you have a compiler program that reads the program, tries to understand it, and converts it into a different format the computer can understand better. In many cases this format is "machine code", which CPUs can understand.
 
