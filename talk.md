@@ -127,7 +127,7 @@ Such compilers are called "bootstrapped compilers". The way their development wo
 §§
 ### Bootstrapped compilers
 
-<img src="img/bootstrap2.svg" width="70%" class=blend></img>
+<img src="img/bootstrap2.svg" width="50%" class=blend></img>
 
 
 ♫
