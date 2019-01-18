@@ -219,17 +219,21 @@ As you go further down this pipeline, the code is represented in more and more c
 §
 ### First tweaks
 
-```python
-def add_backdoor(program):
-    for expression in program.expressions():
-        if expression.is_string_literal():
-            if expression.value == "hello world"
-                expression.set(StringExpression("जगाला नमस्कार"))
+```rust
+fn add_backdoor(program: Program) {
+    for expression in program.expressions() {
+        if expression.is_string_literal() {
+            if expression.value == "hello world" {
+                expression.set(StringExpression::new("जगाला नमस्कार"));
+            }
+        }
+    }
+}
 
-def after_parsing(program):
+fn after_parsing(program: Program) {
     add_backdoor(program)
-    # rest of the code
-
+    // rest of the code
+}
 ```
 
 ♫
@@ -245,22 +249,28 @@ In this function, I basically iterate through all the expressions in the program
 §
 ### Trusting trust attack, take 1
 
-```python
-def add_backdoor(program):
-    for expression in program.expressions():
-        if expression.is_string_literal():
-            if expression.value == "hello world"
-                expression.set(StringExpression("जगाला नमस्कार"))
+```rust
+fn add_backdoor(program: Program) {
+    for expression in program.expressions() {
+        if expression.is_string_literal() {
+            if expression.value == "hello world" {
+                expression.set(StringExpression("जगाला नमस्कार"));
+            }
+        }
+    }
 
-    for function in program.functions():
-        if function.name == "after_parsing":
-            expr = parse("add_backdoor(program)")
-            function.body.insert_expression(expr)
-            function.parent.insert_function(????)
+    for function in program.functions() {
+        if function.name == "after_parsing" {}
+            expr = parse("add_backdoor(program)");
+            function.body.insert_expression(expr);
+            function.parent.insert_function(????);
+    }
+}
 
-def after_parsing(program):
+fn after_parsing(program: Program) {
     add_backdoor(program)
-    # rest of the code        
+    # rest of the code    
+}    
 ```
 
 ♫
@@ -296,22 +306,28 @@ We first create a variable that will contain _just the printing portion_ of the 
 §
 ### Applying the attack
 
-```python
-PROGRAM_STRING = "(all the code below, but not this line)"
+```rust
+const PROGRAM_STRING: &str = "(all the code below, but not this line)";
 
-def add_backdoor(program):
-    for expression in program.expressions():
-        if expression.is_string_literal():
-            if expression.value == "hello world"
-                expression.set(StringExpression("जगाला नमस्कार"))
+fn add_backdoor(program) {
+    for expression in program.expressions() {
+        if expression.is_string_literal() {
+            if expression.value == "hello world" {
+                expression.set(StringExpression("जगाला नमस्कार"));
+            }
+        }
+    }
 
-    for function in program.functions():
-        if function.name == "after_parsing":
-            expr = parse("add_backdoor(program)")
-            function.body.insert_expression(expr)
-            function.parent.insert_function(parse(PROGRAM_STRING))
-            top_line = "PROGRAM_STRING = \"" + PROGRAM_STRING + "\""
-            function.parent.insert_expression(parse(top_line))
+    for function in program.functions() {
+        if function.name == "after_parsing" {
+            expr = parse("add_backdoor(program)");
+            function.body.insert_expression(expr);
+            function.parent.insert_function(parse(PROGRAM_STRING));
+            top_line = "const PROGRAM_STRING: &str = \"" + PROGRAM_STRING + "\"";
+            function.parent.insert_expression(parse(top_line));
+        }
+    }
+}
 ```
 
 ♫
