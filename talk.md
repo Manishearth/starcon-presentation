@@ -113,7 +113,7 @@ Actually, it's worse than that!
 
 For many languages, the compiler for that language is written in ... that language! The Rust compiler is written in Rust, so you need a Rust compiler to build your Rust compiler. This is true for many popular C++ compilers too, like GCC.
 
-That makes even less sense ...
+That .... makes even less sense ...
 
 §
 ### Bootstrapped compilers
@@ -132,7 +132,7 @@ Such compilers are called "bootstrapped compilers". The way their development wo
 
 ♫
 
-Eventually, this chicken-and-egg problem has to end up _somewhere_, which is where the "bootstrapping" comes in. When Dennis Ritchie wrote the first C compiler, he started off by writing a compiler for a much simpler version of C (let's call it C0) in assembly language. Assembly language is a straightforward human-readable translation of machine code, which the CPU understands. This translation can be done by an assembler, which is itself a program that may have been directly written in machine code.
+Eventually, this chicken-and-egg problem has to end up _somewhere_, which is where the actual "bootstrapping" comes in. When Dennis Ritchie wrote the first C compiler, he started off by writing a compiler for a much simpler version of C (let's call it C0) in assembly language. Assembly language is a straightforward human-readable translation of machine code, which the CPU understands. This translation can be done by an assembler, which is itself a program that may have been directly written in machine code.
 
 Then, a compiler was written in this simpler version of C. This compiler supported a more complex (but not yet complete) version of C, called C1. This compiler was built with the older compiler. Then this code was improved to support more features, rebuilt with itself, and then updated to use these new features. This continued.
 
@@ -150,7 +150,7 @@ Newer languages typically use compilers written in a different language to get s
 
 Have you ever thought about how much we trust the tools we use?
 
-In 1984, Ken Thompson gave a talk about the nature of trust, and focused on a fascinating outcome of this bootstrapping process. It turns out!so you can use this process to "hide" vulnerabilities in a compiler!
+In 1984, Ken Thompson gave a talk about the nature of trust, and focused on a fascinating outcome of this bootstrapping process. 
 
 §§
 ### Trusting Trust
@@ -183,7 +183,7 @@ def compile_function(name, code):
 
 ♫
 
-A simple answer to this problem is that you can compile the compiler from source, yourself. Not a big deal.
+A simple answer to the trust problem is that you can compile the compiler from source, yourself. Not a big deal.
 
 But now you have the same problem with the compiler! Since you need a copy of the compiler to build a copy of the compiler, someone can backdoor that compiler so that _it detects that it's building the compiler_ and inserts _itself_ into the new copy, even if the source code being compiled doesn't have this backdoor!
 
@@ -238,7 +238,7 @@ fn after_parsing(program: Program) {
 
 ♫
 
-So my first step was to insert _some_ backdoor into the compiler. I didn't want to do the entire attack at once since I wasn't yet quite sure how to do it, so I instead wrote a simple backdoor that replaces strings that say "hello world" with the equivalent in my native language (जगाला नमस्कार).
+Alright. So my first step was to insert _some_ backdoor into the compiler. I didn't want to do the entire attack at once since I wasn't yet quite sure how to do it, so I instead wrote a simple backdoor that replaces strings that say "hello world" with the equivalent in my native language (जगाला नमस्कार). So a program that prints out "hello world", when compiled by my compiler, will instead print out "जगाला नमस्कार".
 
 The code in this slide is pseudocode; the original Rust code is a bit more complex but the underlying principle is the same. I'll link to a long-form blog post at the end of this talk that contains the actual Rust code if you're interested.
 
@@ -254,7 +254,7 @@ fn add_backdoor(program: Program) {
     for expression in program.expressions() {
         if expression.is_string_literal() {
             if expression.value == "hello world" {
-                expression.set(StringExpression("जगाला नमस्कार"));
+                expression.set(StringExpression::new("जगाला नमस्कार"));
             }
         }
     }
@@ -278,7 +278,7 @@ fn after_parsing(program: Program) {
 
 Alright, the next step is to make the backdoor add itself. We can §iterate through all the functions in the program, §looking for a function named "after_parsing", and §add the "add_backdoor" line to its body.
 
-But how will we §add the "add_backdoor" function to the code? We need to somehow get this code to insert its own source. For that the source of the program needs to be in this function itself as a string. But then _that string_ needs to be in the source as well, which means it needs to be inside itself, which is impossible.
+But how will we §add the "add_backdoor" function to the code? We need to somehow get all this code to insert its own source. For that the source of the program needs to be in this function itself as a string. But then _that string_ needs to be in the source as well, which means it needs to be inside itself, which is impossible.
 
 We need a different solution.
 
@@ -297,11 +297,11 @@ print "s = " + s + "';" + s
 -->
 ♫
 
-Turns out this is a conundrum similar to the one you have when you're constructing quines. A quine is a program that prints its own source code. These are tricky to construct, because of the same reason: if your program contains its own source code, that source code ... needs to contain itself, which makes your program size infinite.
+Turns out this is a conundrum similar to the one you have when you're constructing quines. A quine is a program that prints its own source code. These are tricky to construct, because of the same reason: if your program contains its own source code as a string, that source code ... needs to contain itself, which makes your program size infinite.
 
-With quines, there's a simple trick to get around this: Use a variable!
+With quines, there's a trick to get around this: Use a variable!
 
-We first §create a variable that will contain _just the printing portion_ of the program. As you can see, this variable basically contains the second line of the program. §In the printing portion, we first §print the line that sets this variable, using the variable we just created for the value, §and then we have it print itself, by printing the variable again.
+We first §create a variable that will contain _just the printing portion_ of the program. As you can see, this variable basically contains the second line of the program, as a string. §In the printing portion, we first §print the line that sets this variable, using the variable we just created for the value, §and then we have it print itself, by printing the variable again.
 
 (point at things on slide)
 
@@ -318,7 +318,7 @@ fn add_backdoor(program) {
     for expression in program.expressions() {
         if expression.is_string_literal() {
             if expression.value == "hello world" {
-                expression.set(StringExpression("जगाला नमस्कार"));
+                expression.set(StringExpression::new("जगाला नमस्कार"));
             }
         }
     }
@@ -341,7 +341,7 @@ Alright. Let's try to apply what we've learned to our attack.
 
 §We now have a variable, PROGRAM_STRING, containing the full contents of the `add_backdoor` function.
 
-§When we find the "after_parsing" function, §we first the function call to it (as we did last time).
+§When we find the "after_parsing" function, §we first add the function call to add_backdoor (as we did last time).
 
 Then, we §parse the PROGRAM_STRING line to create a function to insert next to it.
 
