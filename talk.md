@@ -70,7 +70,7 @@ I think compilers are really cool!! I've been involved with the Rust compiler fo
 ### Compilers?
 
 
-<img src="img/compilers.svg" width="50%" class=blend></img>
+<img src="img/compilers.svg" class=blend></img>
 
 ♫
 
@@ -96,6 +96,8 @@ Which was also written in a compiled language?
 
 Which ... also needed a compiler to be built?
 
+(hit slide)
+
 It's compilers all the way down!
 
 §
@@ -116,7 +118,7 @@ That makes even less sense ...
 §
 ### Bootstrapped compilers
 
-<img src="img/bootstrap1.svg" width="75%" class=blend></img>
+<img src="img/bootstrap1.svg" class=blend></img>
 
 ♫
 
@@ -125,7 +127,7 @@ Such compilers are called "bootstrapped compilers". The way their development wo
 §§
 ### Bootstrapped compilers
 
-<img src="img/bootstrap2.svg" width="50%" class=blend></img>
+<img src="img/bootstrap2.svg" width="70%" class=blend></img>
 
 
 ♫
@@ -142,7 +144,7 @@ Newer languages typically use compilers written in a different language to get s
 §
 ### Trusting Trust
 
-<img src="img/trusting.png" width="50%" class=blend></img>
+<img src="img/trusting.png" width="90%" class=blend></img>
 
 ♫
 
@@ -204,10 +206,7 @@ Many years later I had become a contributor to the Rust compiler, and I realized
 §
 ### Anatomy of a compiler
 
-diagram here
-
-Parsing -> Name resolution -> Type checking (and other analyses) -> optimizations -> machine code generation
-
+<img src="img/pipeline.svg" class=blend></img>
 ♫
 
 It's worth understanding how compilers work to understand this attack.
