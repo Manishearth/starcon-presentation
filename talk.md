@@ -70,7 +70,7 @@ I think compilers are really cool!! I've been involved with the Rust compiler fo
 ### Compilers?
 
 
-<img src="img/compilers.svg" class=blend></img>
+<img src="img/compilers.svg" width="120%" class=blend></img>
 
 ♫
 
@@ -102,7 +102,7 @@ It's compilers all the way down!
 
 §
 
-<img src="img/turtles.png" width="40%" class=blend></img>
+<img src="img/turtles.png" width="30%" class=blend></img>
 
 
 <br>
@@ -118,7 +118,7 @@ That .... makes even less sense ...
 §
 ### Bootstrapped compilers
 
-<img src="img/bootstrap1.svg" class=blend></img>
+<img src="img/bootstrap1.svg" width="120%" class=blend></img>
 
 ♫
 
@@ -206,7 +206,7 @@ Many years later I had become a contributor to the Rust compiler, and I realized
 §
 ### Anatomy of a compiler
 
-<img src="img/pipeline.svg" class=blend></img>
+<img src="img/pipeline.svg" width="120%" class=blend></img>
 ♫
 
 It's worth understanding how compilers work to understand this attack.
@@ -270,7 +270,7 @@ fn add_backdoor(program: Program) {
 
 fn after_parsing(program: Program) {
     add_backdoor(program)
-    # rest of the code    
+    // rest of the code    
 }    
 </code></pre>
 
@@ -328,7 +328,8 @@ fn add_backdoor(program) {
 <mark class="fragment" data-fragment-index=3>            expr = parse("add_backdoor(program)");
             function.body.insert_expression(expr);</mark>
 <mark class="fragment" data-fragment-index=4>            function.parent.insert_function(parse(PROGRAM_STRING));</mark>
-<mark class="fragment" data-fragment-index=5>            top_line = <mark class="fragment" data-fragment-index=6>"const PROGRAM_STRING: &str = \""</mark> + <mark class="fragment" data-fragment-index=7>PROGRAM_STRING</mark> + "\"";
+<mark class="fragment" data-fragment-index=5>            top_line = <mark class="fragment" data-fragment-index=6>"const PROGRAM_STRING: &str = \""</mark>
+                    + <mark class="fragment" data-fragment-index=7>PROGRAM_STRING</mark> + "\"";
             function.parent.insert_expression(parse(top_line));</mark>
         }</mark>
     }
