@@ -55,48 +55,60 @@ take 2:
 
 ♫
 
-Hi, my name is Manish. I work at Mozilla on the Servo browser engine and contribute to the Rust programming language.
+Hi, my name is Manish.
 
+Today I'm going to talk to you about compilers!
 
 §
 
-### I think compilers are rad!!
+<table>
+    <tr border=0><td style="border:none"><img src="img/servo-transparent.png" width="400px" style="margin-bottom: 90px" class=blend></img></td><td style="border:none"><img height="512px" width="512px" src="img/rust-logo-blk.svg" class=blend></img></td></tr>
+    <tr border=0><td>Servo browser engine</td><td>Rust Programming Language</td></tr>
+</table>
+
 
 ♫
+I work at Mozilla on an experimental web browser called Servo. I've also spent a lot of time contributing to the Rust compiler.
 
-I think compilers are really cool!! I've been involved with the Rust compiler for many years now and I'm still learning new things about it!
+Rust is a programming language that tries to empower everyone to build reliable and efficient software.
+
+
 
 §
 ### Compilers?
 
 
-<img src="img/compilers.svg" width="120%" class=blend></img>
+<img src="img/compilers.svg" width="120%" class="blend diagram"></img>
 
 ♫
 
-So, what _is_ a compiler?
+Rust is a compiled language.
 
-When you write programs, in some cases the program is _interpreted_, and in others it is _compiled_. When it's interpreted, you have an "interpreter program" that reads the program, tries to understand it, and carries out the various steps listed in it. When it's compiled, you have a compiler program that reads the program, tries to understand it, and converts it into a different format the computer can understand better. In many cases this format is "machine code", which CPUs can understand.
+In compiled languages, you have a compiler program that reads your source code, and converts it into machine code.
 
 Compilers are a fundamental tool in programming and are necessary for programming in many languages.
+
+§
+### I think compilers are rad!!
+
+♫
+
+I think, compilers are really cool!!
 
 §
 ### Who compiles the compilers?
 
 
+<img src="img/compilerq.svg" width="120%" class="blend diagram"></img>
+
 ♫
+(slow down a bit)
 
-But compilers are themselves programs, which came from somewhere, right?
+So compilers are what compile our program ... but, what compiles .. the compilers?
 
-Compilers are also usually written in compiled languages.
+It has to be another compiler!
 
-But that means you need a compiler to compile your compiler, right?
-
-Which was also written in a compiled language?
-
-Which ... also needed a compiler to be built?
-
-(hit slide)
+(next slide)
 
 It's compilers all the way down!
 
@@ -109,25 +121,22 @@ It's compilers all the way down!
 <small>https://commons.wikimedia.org/wiki/File:Turtles_all_the_way_down.png</small>
 ♫
 
-Actually, it's worse than that!
+For many languages, the compiler for that language is written in ... that same language! The Rust compiler is written in Rust, so you need a Rust compiler to build your Rust compiler. This is true for many popular C++ compilers too, like GCC.
 
-For many languages, the compiler for that language is written in ... that language! The Rust compiler is written in Rust, so you need a Rust compiler to build your Rust compiler. This is true for many popular C++ compilers too, like GCC.
-
-That .... makes even less sense ...
 
 §
 ### Bootstrapped compilers
 
-<img src="img/bootstrap1.svg" width="120%" class=blend></img>
+<img src="img/bootstrap1.svg" width="120%" class="blend diagram"></img>
 
 ♫
 
-Such compilers are called "bootstrapped compilers". The way their development works is that you build new compilers using older versions. The current GCC can be built with most C++ compilers from at least the past decade. And so on. Similarly, most recent versions of the Rust compiler are built with the previous version of Rust.
+Such compilers are called "bootstrapped compilers". The way their development works is that you build new compilers using older versions. The current GCC can be built with most C++ compilers from at least the past decade. Similarly, most recent versions of the Rust compiler are built with the previous version of Rust.
 
 §§
 ### Bootstrapped compilers
 
-<img src="img/bootstrap2.svg" width="50%" class=blend></img>
+<img src="img/bootstrap2.svg" width="50%" class="blend diagram"></img>
 
 
 ♫
@@ -144,7 +153,7 @@ Newer languages typically use compilers written in a different language to get s
 §
 ### Trusting Trust
 
-<img src="img/trusting.png" width="90%" class=blend></img>
+<img src="img/trusting.png" width="90%" class="blend diagram"></img>
 
 ♫
 
@@ -197,7 +206,7 @@ This kind of attack is often called the "Trusting Trust" attack.
 
 ♫
 
-When I first heard about this I was _very_ intrigued. Compilers often have a weird chicken-and-egg situation, and furthermore it can be abused to hide vulnerabilities in a compiler!
+When I first heard about this I was _very_ intrigued. I was fascinated to hear that compilers often have a weird chicken-and-egg situation, and furthermore it can be abused to hide vulnerabilities in the compiler!
 
 This _really_ got me interested in compilers. At the time, I didn't understand how they worked and didn't feel confident enough to work on them, but a personal goal was to one day write a version of this attack for myself!
 
@@ -206,7 +215,7 @@ Many years later I had become a contributor to the Rust compiler, and I realized
 §
 ### Anatomy of a compiler
 
-<img src="img/pipeline.svg" width="120%" class=blend></img>
+<img src="img/pipeline.svg" width="120%" class="blend diagram"></img>
 ♫
 
 It's worth understanding how compilers work to understand this attack.
@@ -276,9 +285,9 @@ fn after_parsing(program: Program) {
 
 ♫
 
-Alright, the next step is to make the backdoor add itself. We can §iterate through all the functions in the program, §looking for a function named "after_parsing", and §add the "add_backdoor" line to its body.
+Alright, the next step is to make the backdoor add itself. We can §iterate through all the functions in the program, §looking for a function named "after_parsing", and §add a call to the "add_backdoor" function to its body.
 
-But how will we §add the "add_backdoor" function to the code? We need to somehow get all this code to insert its own source. For that the source of the program needs to be in this function itself as a string. But then _that string_ needs to be in the source as well, which means it needs to be inside itself, which is impossible.
+But how will we §add the "add_backdoor" function to the code? We need to somehow get all this code to insert its own source. For that, the source of the program needs to be in this function itself as a string. But then _that string_ needs to be in the source as well, which means it needs to be inside itself, which is impossible.
 
 We need a different solution.
 
@@ -327,8 +336,8 @@ fn add_backdoor(program) {
 <mark class="fragment" data-fragment-index=2>        if function.name == "after_parsing" {
 <mark class="fragment" data-fragment-index=3>            expr = parse("add_backdoor(program)");
             function.body.insert_expression(expr);</mark>
-<mark class="fragment" data-fragment-index=4>            function.parent.insert_function(parse(PROGRAM_STRING));</mark>
-<mark class="fragment" data-fragment-index=5>            top_line = <mark class="fragment" data-fragment-index=6>"const PROGRAM_STRING: &str = \""</mark>
+<mark class="fragment" data-fragment-index=4>            function.parent.insert_function(parse(<mark class="fragment" data-fragment-index=6>PROGRAM_STRING</mark>));</mark>
+<mark class="fragment" data-fragment-index=5>            top_line = "const PROGRAM_STRING: &str = \""
                     + <mark class="fragment" data-fragment-index=7>PROGRAM_STRING</mark> + "\"";
             function.parent.insert_expression(parse(top_line));</mark>
         }</mark>
@@ -348,14 +357,14 @@ Then, we §parse the PROGRAM_STRING line to create a function to insert next to 
 
 §Finally, we create the line that sets PROGRAM_STRING itself, again reusing PROGRAM_STRING for its contents.
 
-As you can see here, the PROGRAM_STRING variable is used twice here, §once for producing the add_backdoor function, and §once for producing itself!
+As you can see here, the PROGRAM_STRING variable is used twice, §once for producing the add_backdoor function, and §once for producing itself!
 
 §
 ### Try it!
 
 ♫
 
-While I did this with the Rust compiler, most compilers work similarly. This attack is a fun way to learn more about a compiler -- if you're interested in playing with compilers I suggest you try doing this yourself with a compiler of your choice!
+While I did this with the Rust compiler, most compilers work similarly and it should be possible to replicate this attack with them. This attack is a fun way to learn more about a compiler -- if you're interested in playing with compilers I suggest you try doing this yourself with a compiler of your choice!
 
 <!-- maybe a slide on implications and mitigations -->
 
